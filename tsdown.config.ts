@@ -22,13 +22,13 @@ const common: UserConfig = {
   outExtensions: () => ({ js: '.js' }),
   publint: true,
   external: dshExternal,
-  plugins: [StaleGuardRecorder],
 }
 
 export default defineConfig([
   {
     ...common,
     entry: { index: 'src/index.ts' },
+    plugins: [StaleGuardRecorder({ hashFile: 'node_modules/.cache/tsdown-stale-guard/host.yaml' })],
     dts: true,
     sourcemap: false,
     clean: true,
@@ -36,6 +36,7 @@ export default defineConfig([
   {
     ...common,
     entry: { client: 'src/client/index.ts' },
+    plugins: [StaleGuardRecorder({ hashFile: 'node_modules/.cache/tsdown-stale-guard/client.yaml' })],
     // Client bundles are classic scripts consumed by dsh-client-modules.
     // CJS output is required so its exports remain inside the loader factory.
     format: 'cjs',

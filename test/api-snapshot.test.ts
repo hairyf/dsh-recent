@@ -7,7 +7,8 @@ const root = fileURLToPath(new URL('..', import.meta.url))
 
 describe('api snapshot', () => {
   beforeAll(async () => {
-    await guardStaleBuild({ root })
+    for (const entry of ['host', 'client'])
+      await guardStaleBuild({ root, hashFile: `node_modules/.cache/tsdown-stale-guard/${entry}.yaml` })
   })
 
   snapshotApiPerEntry(root)

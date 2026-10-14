@@ -1,0 +1,73 @@
+// @vitest-environment jsdom
+import { SessionId } from '@deepseek-ai/dsh-session/types'
+import { expect, it, vi } from 'vitest'
+import { createRowLinks, observeRecentMount } from '../src/client/dom'
+
+it('links duplicate-title rows by identity, preserves selection and disposes every decoration', () => {
+  const source = document.createElement('div')
+  const recent = document.createElement('button')
+  const unrelated = document.createElement('button')
+  source.setAttribute('role', 'treeitem')
+  source.setAttribute('aria-selected', 'false')
+  for (const row of [source, recent, unrelated])
+    row.textContent = 'Same title'
+  document.body.append(source, recent, unrelated)
+  const links = createRowLinks()
+  links.bind(source, SessionId('a'))
+  const unbind = links.bind(recent, SessionId('a'))
+  links.bind(unrelated, SessionId('b'))
+  const highlighted = () => [source, recent, unrelated].map(row => row.hasAttribute('data-dsh-recent-hover'))
+  recent.dispatchEvent(new Event('pointerenter'))
+  expect(highlighted()).toEqual([true, true, false])
+  links.select(SessionId('a'))
+  recent.dispatchEvent(new Event('pointerleave'))
+  expect(highlighted()).toEqual([false, false, false])
+  expect(source.hasAttribute('data-dsh-recent-selected')).toBe(true)
+  expect(recent.hasAttribute('data-dsh-recent-selected')).toBe(true)
+  source.dispatchEvent(new Event('pointerenter'))
+  expect(highlighted()).toEqual([true, true, false])
+  source.dispatchEvent(new Event('pointerleave'))
+  recent.dispatchEvent(new FocusEvent('focusin'))
+  expect(highlighted()).toEqual([true, true, false])
+  recent.dispatchEvent(new FocusEvent('focusout'))
+  expect(highlighted()).toEqual([false, false, false])
+  unbind()
+  recent.dispatchEvent(new Event('pointerenter'))
+  expect(highlighted()).toEqual([false, false, false])
+  links.dispose()
+  for (const row of [source, recent, unrelated])
+    expect([...row.attributes].some(attribute => attribute.name.startsWith('data-dsh-recent'))).toBe(false)
+  expect(source.getAttribute('aria-selected')).toBe('false')
+  document.body.replaceChildren()
+})
+
+it('mounts after the official session tree, follows replacement and cleans up its observer', async () => {
+  const tree = (): HTMLElement => {
+    const node = document.createElement('div')
+    node.setAttribute('role', 'tree')
+    node.setAttribute('aria-label', 'Sessions')
+    return node
+  }
+  const search = document.createElement('div')
+  search.setAttribute('role', 'tree')
+  search.setAttribute('aria-label', 'Search results')
+  const first = tree()
+  document.body.append(search, first)
+  const mounted = vi.fn()
+  const dispose = observeRecentMount('Sessions', mounted)
+  expect(first.nextElementSibling?.className).toBe('dsh-recent')
+  expect(document.querySelectorAll('.dsh-recent')).toHaveLength(1)
+  const second = tree()
+  first.replaceWith(second)
+  await vi.waitFor(() => expect(second.nextElementSibling?.className).toBe('dsh-recent'))
+  expect(document.querySelectorAll('.dsh-recent')).toHaveLength(1)
+  second.remove()
+  await vi.waitFor(() => expect(mounted).toHaveBeenLastCalledWith(null))
+  dispose()
+  const calls = mounted.mock.calls.length
+  document.body.append(tree())
+  await new Promise(resolve => setTimeout(resolve, 0))
+  expect(mounted).toHaveBeenCalledTimes(calls)
+  expect(document.querySelector('.dsh-recent')).toBeNull()
+  document.body.replaceChildren()
+})

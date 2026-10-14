@@ -1,17 +1,17 @@
 {
-  "name": "pkg-placeholder",
+  "name": "dsh-recent",
   "type": "module",
   "version": "0.0.0",
   "packageManager": "pnpm@11.15.1",
-  "description": "_description_",
+  "description": "Recent sessions below the DSH workspace list with linked hover and selection.",
   "author": "Hairy <wwu710632@gmail.com>",
   "license": "MIT",
-  "homepage": "https://github.com/dsh-tauri-desk/pkg-placeholder#readme",
+  "homepage": "https://github.com/hairyf/dsh-recent#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dsh-tauri-desk/pkg-placeholder.git"
+    "url": "git+https://github.com/hairyf/dsh-recent.git"
   },
-  "bugs": "https://github.com/dsh-tauri-desk/pkg-placeholder/issues",
+  "bugs": "https://github.com/hairyf/dsh-recent/issues",
   "keywords": [],
   "sideEffects": false,
   "exports": {
@@ -31,7 +31,12 @@
     "client": {
       "inject": [
         "@deepseek-ai/dsh-client-runtime",
-        "@deepseek-ai/dsh-client-ui-layout"
+        "@deepseek-ai/dsh-client-ui-layout",
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-renderer",
+        "@deepseek-ai/dsh-client-ui-primitives",
+        "@deepseek-ai/dsh-client-ui-session",
+        "@deepseek-ai/dsh-client-ui-workspace"
       ],
       "platform": "web"
     },
@@ -102,10 +107,15 @@
     "@deepseek-ai/dsh-util-values": "catalog:dsh",
     "@deepseek-ai/dsh-workspace": "catalog:dsh",
     "@types/node": "catalog:types",
+    "@types/react": "catalog:types",
+    "@types/react-dom": "catalog:types",
     "bumpp": "catalog:cli",
     "eslint": "catalog:cli",
+    "jsdom": "catalog:testing",
     "nano-staged": "catalog:cli",
     "publint": "catalog:cli",
+    "react": "catalog:ui",
+    "react-dom": "catalog:ui",
     "simple-git-hooks": "catalog:cli",
     "skills-npm": "catalog:cli",
     "tsdown": "catalog:cli",
