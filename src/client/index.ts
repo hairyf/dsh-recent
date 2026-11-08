@@ -10,6 +10,8 @@ import { RecentGroup } from './recent-group'
 import { RowMarker } from './row-marker'
 import { mountRecentStyles } from './styles'
 
+export const inject = ['slots', 'locale', 'uiWorkspace']
+
 export function apply(ctx: Context): void {
   ctx.effect(mountRecentStyles)
   const links = createRowLinks()

@@ -16,6 +16,8 @@ it('links duplicate-title rows by identity, preserves selection and disposes eve
   links.bind(source, SessionId('a'))
   const unbind = links.bind(recent, SessionId('a'))
   links.bind(unrelated, SessionId('b'))
+  // Identity is exposed on the row so consumers never match on a duplicate title.
+  expect([source, recent, unrelated].map(row => row.getAttribute('data-dsh-recent-session'))).toEqual(['a', 'a', 'b'])
   const highlighted = () => [source, recent, unrelated].map(row => row.hasAttribute('data-dsh-recent-hover'))
   recent.dispatchEvent(new Event('pointerenter'))
   expect(highlighted()).toEqual([true, true, false])

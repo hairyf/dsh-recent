@@ -46,12 +46,15 @@ export function createRowLinks(): RowLinks {
       if (focused === row)
         focused = undefined
       row.removeAttribute('data-dsh-recent-row')
+      row.removeAttribute('data-dsh-recent-session')
       row.removeAttribute('data-dsh-recent-hover')
       row.removeAttribute('data-dsh-recent-selected')
       refresh()
     }
     rows.set(row, { id, dispose })
     row.setAttribute('data-dsh-recent-row', '')
+    // Session identity is the only stable handle: seeded rows may share a title.
+    row.setAttribute('data-dsh-recent-session', id)
     row.addEventListener('pointerenter', enter)
     row.addEventListener('pointerleave', leave)
     row.addEventListener('focusin', focus)
@@ -72,7 +75,7 @@ export function createRowLinks(): RowLinks {
   }
 }
 
-/** ponytail: SDK alpha.1 has no list-tail Slot; replace with one when upstream exposes it. */
+/** SDK 0.2.2-rc.1 has no list-tail Slot; anchor to the accessible workspace tree. */
 export function observeRecentMount(label: string, onMount: (mount: HTMLElement | null) => void): () => void {
   let tree: Element | undefined
   let mount: HTMLDivElement | undefined
