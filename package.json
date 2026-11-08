@@ -43,18 +43,6 @@
       "patch": "./cordis.patch.yml"
     }
   },
-  "scripts": {
-    "build": "tsdown",
-    "dev": "tsdown --watch",
-    "lint": "eslint",
-    "prepack": "nr build",
-    "release": "bumpp",
-    "start": "tsx src/index.ts",
-    "test": "pnpm run build && vitest",
-    "typecheck": "tsc",
-    "prepare": "git config core.hooksPath .githooks && simple-git-hooks && skills-npm",
-    "test:e2e": "vitest run --config vitest.e2e.config.ts"
-  },
   "scripts-info": {
     "build": "Build the library for publishing",
     "dev": "Rebuild on change during development",
@@ -66,6 +54,21 @@
     "typecheck": "Check types",
     "prepare": "Set up git hooks and skills",
     "test:e2e": "Run browser E2E tests against an isolated official DSH"
+  },
+  "engines": {
+    "node": ">=24.9.0"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "lint": "eslint",
+    "prepack": "nr build",
+    "release": "bumpp",
+    "start": "tsx src/index.ts",
+    "test": "pnpm run build && vitest",
+    "typecheck": "tsc",
+    "prepare": "git config core.hooksPath .githooks && simple-git-hooks && skills-npm",
+    "test:e2e": "vitest run --config vitest.e2e.config.ts"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "^4.1.0",

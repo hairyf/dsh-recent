@@ -28,8 +28,8 @@ pnpm pack
 dsh plugin --profile web add ./dsh-recent-0.0.0.tgz
 ```
 
-- 在 **设置 → 插件** 中启用，插件名与 ID 均为 `dsh-recent`（见 `cordis.patch.yml`）。
-- 构建使用 Node.js `^24.15.0 || >=26.0.0` 与 pnpm `11.15.1`。
+- 安装后由 `cordis.patch.yml` 挂载到 profile，可在 **设置 → 插件** 中查看或停用，插件 ID 为 `dsh-recent`。
+- 构建使用 Node.js `>=24.9.0`（官方 DSH CLI 的 `engines` 要求）与 pnpm `11.15.1`。
 
 ## ✨ 特性
 
